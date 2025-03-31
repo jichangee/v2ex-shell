@@ -55,7 +55,8 @@ export async function getTopicDetail(url) {
         author: $element.find('.dark').text().trim(),
         content: $element.find('.reply_content').text().trim(),
         like: $element.find('td .small.fade').text().trim(),
-        time: $element.find('.ago').text().trim()
+        time: $element.find('.ago').text().trim(),
+        op: $element.find('.badge.op').text().trim() === 'OP'
       };
       replies.push(reply);
     });
