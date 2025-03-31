@@ -1,25 +1,37 @@
 {
   "name": "v2ex-shell",
   "version": "1.0.0",
+  "description": "一个基于 Node.js 的 V2EX 命令行工具",
   "main": "index.js",
+  "type": "module",
   "bin": {
     "v2ex-shell": "./index.js"
   },
-  "type": "module",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "npm test",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "release:beta": "npm version prerelease --preid=beta && npm publish --tag beta",
+    "release:alpha": "npm version prerelease --preid=alpha && npm publish --tag alpha"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "v2ex",
+    "cli",
+    "terminal",
+    "command-line",
+    "shell"
+  ],
+  "author": "Your Name",
   "license": "ISC",
-  "description": "一个命令行网站信息获取工具",
   "dependencies": {
-    "axios": "^1.8.4",
-    "chalk": "^5.4.1",
-    "cheerio": "^1.0.0",
-    "commander": "^13.1.0",
-    "inquirer": "^12.5.0",
-    "ora": "^8.2.0"
+    "axios": "^1.6.7",
+    "chalk": "^5.3.0",
+    "cheerio": "^1.0.0-rc.12",
+    "commander": "^12.0.0",
+    "inquirer": "^9.2.15",
+    "ora": "^7.0.1"
   }
 }
