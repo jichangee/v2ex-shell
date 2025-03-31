@@ -17,9 +17,11 @@ async function displayTopicDetail(topic, currentPage) {
     detail.replies.reverse().forEach((reply, index) => {
       console.log(
         chalk.italic(
-          `${repliesLen - index + (currentPage - 1) * 100}. ${reply.author} ${
-            reply.op ? chalk.green("[OP]") : ""
-          } ${chalk.gray(`(${reply.time})`)} ${reply.like ? ` 感谢：${reply.like}` : ""}`
+          `${repliesLen - index + (currentPage - 1) * 100}.` +
+          ` ${reply.author}` +
+          `${reply.op ? chalk.green(" [OP]") : ""}` +
+          `${reply.like ? ` ${chalk.red(`感谢：${reply.like}`)}` : ""}` +
+          ` ${chalk.gray(`(${reply.time})`)}`
         )
       );
       console.log(chalk.yellow(wrapText(reply.content)));
@@ -73,7 +75,8 @@ async function main() {
         value: topic,
       }));
 
-      choices.push({ name: "退出", value: "exit" });
+      choices.push({ name: "🚪退出", value: "exit" });
+      choices.push({ name: "🔍节点", value: "node" });
 
       const { selection } = await inquirer.prompt([
         {

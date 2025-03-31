@@ -1,4 +1,4 @@
-export function wrapText(text, len = 80) {
+export function wrapText(text, len = 50) {
   let result = "";
   let index = 0;
   text.split("").forEach((char) => {

@@ -56,7 +56,11 @@ export async function getTopicDetail(url, page = 1) {
     });
 
     const $ = cheerio.load(response.data);
-    const content = $(".topic_content").text().trim();
+    const content = $(".topic_content")
+      .html()
+      .replace(/<br\s*\/?>/g, "\n")
+      .replace(/<[^>]*>/g, "")
+      .trim();
     const replies = [];
 
     $('.cell[id^="r_"]').each((i, element) => {
