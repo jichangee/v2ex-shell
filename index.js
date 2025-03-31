@@ -4,19 +4,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import inquirer from 'inquirer';
 import { getTopicsHot, getTopicDetail } from './api.js';
-
-async function displayTopics(topics, currentPage) {
-  console.log(chalk.blue(`\nV2EX 热门话题 (第 ${currentPage} 页)：\n`));
-  
-  topics.forEach((topic, index) => {
-    console.log(chalk.yellow(`${index + 1}. ${topic.title}`));
-    console.log(chalk.gray(`   标签: ${topic.node}`));
-    console.log(chalk.gray(`   发帖人: ${topic.author}`));
-    console.log(chalk.gray(`   最后回帖: ${topic.lastReplyAuthor} (${topic.lastReplyTime})`));
-    console.log(chalk.gray(`   回复数: ${topic.replies}`));
-    console.log(chalk.gray(`   链接: ${topic.url}\n`));
-  });
-}
+import { wrapText } from './utils.js';
 
 async function displayTopicDetail(topic) {
   const spinner = ora('正在获取话题详情...').start();
@@ -25,17 +13,17 @@ async function displayTopicDetail(topic) {
     const detail = await getTopicDetail(topic.url);
     
     spinner.succeed('获取成功！');
-    
-    console.log(chalk.blue(`\n${topic.title}\n`));
-    console.log(chalk.white('内容：'));
-    console.log(chalk.yellow(detail.content));
-    console.log(chalk.blue('\n回复：\n'));
-    
-    detail.replies.forEach((reply, index) => {
-      console.log(chalk.gray(`${index + 1}. ${reply.author} (${reply.time}) ${reply.like ? ` 感谢：${reply.like}` : ''}`));
-      console.log(chalk.yellow(reply.content));
+    const repliesLen = detail.replies.length;
+    detail.replies.reverse().forEach((reply, index) => {
+      console.log(chalk.gray(`${repliesLen - index}. ${reply.author} ${reply.op ? chalk.green('[OP]') : ''} (${reply.time}) ${reply.like ? ` 感谢：${reply.like}` : ''}`));
+      console.log(chalk.yellow(wrapText(reply.content)));
       console.log('');
     });
+
+    console.log(chalk.blue(`\n${topic.title}\n`));
+    console.log(chalk.white('内容：'));
+    console.log(chalk.yellow(wrapText(detail.content)));
+    console.log(chalk.blue('\n回复：\n'));
     
     const { action } = await inquirer.prompt([
       {
@@ -68,8 +56,6 @@ async function main() {
       
       spinner.succeed('获取成功！');
       
-      await displayTopics(topics, currentPage);
-      
       const choices = topics.map(topic => ({
         name: topic.title,
         value: topic
@@ -88,10 +74,6 @@ async function main() {
       
       if (selection === 'exit') {
         break;
-      } else if (selection === 'prev') {
-        currentPage--;
-      } else if (selection === 'next') {
-        currentPage++;
       } else {
         const action = await displayTopicDetail(selection);
         if (action === 'exit') {
