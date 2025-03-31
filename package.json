@@ -25,7 +25,7 @@
     "shell"
   ],
   "author": "Your Name",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "axios": "^1.6.7",
     "chalk": "^5.3.0",
