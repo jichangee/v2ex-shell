@@ -3,9 +3,9 @@ import * as cheerio from "cheerio";
 
 const BASE_URL = "https://www.v2ex.com";
 
-export async function getTopicsHot() {
+export async function getTopicsList(url) {
   try {
-    const response = await axios.get(`${BASE_URL}/?tab=hot`, {
+    const response = await axios.get(`${BASE_URL}${url}`, {
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -14,7 +14,7 @@ export async function getTopicsHot() {
 
     const $ = cheerio.load(response.data);
     const topics = [];
-
+    const tabs = [];
     // 解析热门话题列表
     $(".cell.item").each((i, element) => {
       const $element = $(element);
@@ -36,11 +36,25 @@ export async function getTopicsHot() {
       };
       topics.push(topic);
     });
+
+    $("#Tabs a").each((i, element) => {
+      const $element = $(element);
+      const tab = {
+        title: $element.text().trim(),
+        url: $element.attr("href"),
+      };
+      tabs.push(tab);
+    });
+
+    const currentTabTitle = $(".tab_current").text().trim();
+
     return {
       topics,
+      tabs,
+      currentTabTitle,
     };
   } catch (error) {
-    throw new Error(`获取热门话题失败: ${error.message}`);
+    throw new Error(`获取热门话题失败: ${error.message}，${BASE_URL}${url}`);
   }
 }
 

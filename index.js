@@ -3,7 +3,7 @@
 import chalk from "chalk";
 import ora from "ora";
 import inquirer from "inquirer";
-import { getTopicsHot, getTopicDetail } from "./api.js";
+import { getTopicsList, getTopicDetail } from "./api.js";
 import { wrapText } from "./utils.js";
 
 async function displayTopicDetail(topic, currentPage) {
@@ -62,11 +62,12 @@ async function displayTopicDetail(topic, currentPage) {
 }
 
 async function main() {
+  let topicsUrl = "/?tab=hot";
   while (true) {
-    const spinner = ora("正在获取最热话题...").start();
+    const spinner = ora("正在获取话题...").start();
 
     try {
-      const { topics } = await getTopicsHot();
+      const { topics, tabs, currentTabTitle } = await getTopicsList(topicsUrl);
 
       spinner.succeed("获取成功！");
 
@@ -82,13 +83,31 @@ async function main() {
         {
           type: "list",
           name: "selection",
-          message: "最热：",
+          message: `${currentTabTitle}：`,
           choices,
         },
       ]);
 
       if (selection === "exit") {
         break;
+      } else if (selection === "node") {
+        const { selection: nodeSelection } = await inquirer.prompt([
+          {
+            type: "list",
+            name: "selection",
+            message: "请选择节点：",
+            choices: tabs.map((tab) => ({
+              name: tab.title,
+              value: tab,
+            })),
+          },
+        ]);
+
+        if (nodeSelection === "back") {
+          continue;
+        } else {
+          topicsUrl = nodeSelection.url;
+        }
       } else {
         let currentPage = 1;
         while (true) {
