@@ -4,15 +4,21 @@ import chalk from "chalk";
 import ora from "ora";
 import inquirer from "inquirer";
 import { getTopicsList, getTopicDetail } from "./api.js";
-import { wrapText } from "./utils.js";
+import { wrapText, refReplyContent } from "./utils.js";
 
+let lastReplys = [];
 async function displayTopicDetail(topic, currentPage) {
   const spinner = ora("正在获取话题详情...").start();
 
   try {
     const detail = await getTopicDetail(topic.url, currentPage);
-
+    if (currentPage === 1) {
+      lastReplys = [...detail.replies];
+    } else {
+      lastReplys = [...lastReplys, ...detail.replies];
+    }
     spinner.succeed("获取成功！");
+    detail.replies = refReplyContent(detail.replies, lastReplys);
     const repliesLen = detail.replies.length;
     detail.replies.reverse().forEach((reply, index) => {
       console.log(
@@ -25,6 +31,9 @@ async function displayTopicDetail(topic, currentPage) {
         )
       );
       console.log(chalk.yellow(wrapText(reply.content)));
+      if (reply.replyContent) {
+        console.log(chalk.blue(wrapText(reply.replyContent)));
+      }
       console.log("");
     });
 

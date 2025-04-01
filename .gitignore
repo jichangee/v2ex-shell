@@ -31,3 +31,5 @@ pids/
 
 # 可选 eslint 缓存
 .eslintcache 
+
+preindex.js
