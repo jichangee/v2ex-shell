@@ -2,6 +2,10 @@
 
 一个基于 Node.js 的 V2EX 命令行工具，让你可以在终端中浏览 V2EX 的热门话题。
 
+<div align="center">
+  <img src="./demo/demo.gif">
+</div>
+
 ## 功能特性
 
 - 📱 浏览 V2EX 热门话题
