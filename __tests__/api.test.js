@@ -1,4 +1,4 @@
-import { getTopicsHot, getTopicDetail } from '../api.js';
+import { getTopicsList, getTopicDetail } from '../api.js';
 import axios from 'axios';
 import cheerio from 'cheerio';
 
@@ -10,10 +10,13 @@ describe('API Tests', () => {
     jest.clearAllMocks();
   });
 
-  describe('getTopicsHot', () => {
-    it('should fetch and parse hot topics correctly', async () => {
+  describe('getTopicsList', () => {
+    it('应该正确获取和解析热主题', async () => {
       // Mock HTML response
       const mockHtml = `
+        <div class="cell" id="Tabs">
+        <a href="/?tab=tech" class="tab">技术</a><a href="/?tab=creative" class="tab">创意</a><a href="/?tab=play" class="tab">好玩</a><a href="/?tab=apple" class="tab">Apple</a><a href="/?tab=jobs" class="tab">酷工作</a><a href="/?tab=deals" class="tab">交易</a><a href="/?tab=city" class="tab">城市</a><a href="/?tab=qna" class="tab">问与答</a><a href="/?tab=hot" class="tab_current">最热</a><a href="/?tab=all" class="tab">全部</a><a href="/?tab=r2" class="tab">R2</a><a href="/xna" class="tab">VXNA</a>
+        </div>
         <div class="cell item">
           <table>
             <tr>
@@ -47,9 +50,47 @@ describe('API Tests', () => {
         status: 200
       });
 
-      const result = await getTopicsHot();
+      const result = await getTopicsList('/?tab=hot');
 
       expect(result).toEqual({
+        currentTabTitle: '最热',
+        tabs: [{
+          title: '技术',
+          url: '/?tab=tech'
+        }, {
+          title: '创意',
+          url: '/?tab=creative'
+        }, {
+          title: '好玩',
+          url: '/?tab=play'
+        }, {
+          title: 'Apple',
+          url: '/?tab=apple'
+        }, {
+          title: '酷工作',
+          url: '/?tab=jobs'
+        }, {
+          title: '交易',
+          url: '/?tab=deals'
+        }, {
+          title: '城市',
+          url: '/?tab=city'
+        }, {
+          title: '问与答',
+          url: '/?tab=qna'
+        }, {
+          title: '最热',
+          url: '/?tab=hot'
+        }, {
+          title: '全部',
+          url: '/?tab=all'
+        }, {
+          title: 'R2',
+          url: '/?tab=r2'
+        }, {
+          title: 'VXNA',
+          url: '/xna'
+        }],
         topics: [{
           title: 'Test Topic',
           url: 'https://www.v2ex.com/t/123',
@@ -71,7 +112,7 @@ describe('API Tests', () => {
     it('should handle network errors', async () => {
       axios.get.mockRejectedValueOnce(new Error('Network error'));
 
-      await expect(getTopicsHot()).rejects.toThrow('获取热门话题失败: Network error');
+      await expect(getTopicsList()).rejects.toThrow('获取热门话题失败: Network error');
     });
   });
 
