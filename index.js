@@ -38,10 +38,11 @@ async function displayTopicDetail(topic, currentPage) {
     });
 
     if (currentPage === 1) {
-      console.log(chalk.blue(`\n${topic.title}\n`));
-      console.log(chalk.white("内容："));
-      console.log(chalk.yellow(wrapText(detail.content)));
-      console.log(chalk.blue("\n链接：" + topic.url));
+      console.log(chalk.white(`\n${topic.title}\n`));
+      if (detail.content) {
+        console.log(chalk.yellow(wrapText(detail.content)));
+      }
+      console.log(chalk.white("\n链接：" + topic.url));
     }
 
     const choices = [{ name: "返回列表", value: "back" }];

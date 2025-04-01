@@ -70,8 +70,8 @@ export async function getTopicDetail(url, page = 1) {
     });
 
     const $ = cheerio.load(response.data);
-    const content = $(".topic_content")
-      .html()
+    const contentHtml = $(".topic_content").html() || '';
+    const content = contentHtml
       .replace(/<br\s*\/?>/g, "\n")
       .replace(/<[^>]*>/g, "")
       .trim();
