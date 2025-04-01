@@ -22,7 +22,7 @@ npx v2ex-shell
 
 1. 克隆仓库：
 ```bash
-git clone https://github.com/yourusername/v2ex-shell.git
+git clone https://github.com/jichangee/v2ex-shell.git
 cd v2ex-shell
 ```
 
