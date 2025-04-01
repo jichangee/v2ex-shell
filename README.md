@@ -2,9 +2,7 @@
 
 一个基于 Node.js 的 V2EX 命令行工具，让你可以在终端中浏览 V2EX 的热门话题。
 
-<div align="center">
-  <img src=" https://cdn.jsdelivr.net/gh/jichangee/gallery@master/imgur/demo.gif?raw=true">
-</div>
+![image](https://cdn.jsdelivr.net/gh/jichangee/gallery@master/imgur/demo.gif?raw=true)
 
 ## 功能特性
 
