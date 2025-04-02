@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
+import { convertHTMLContentToText } from "./utils.js";
 
 const BASE_URL = "https://www.v2ex.com";
 
@@ -59,8 +60,6 @@ export async function getTopicsList(url) {
 }
 
 export async function getTopicDetail(url, page = 1) {
-  console.log("page", `${url}?p=${page}`);
-
   try {
     const response = await axios.get(`${url}?p=${page}`, {
       headers: {
@@ -70,23 +69,15 @@ export async function getTopicDetail(url, page = 1) {
     });
 
     const $ = cheerio.load(response.data);
-    const contentHtml = $(".topic_content").html() || '';
-    const content = contentHtml
-      .replace(/<br\s*\/?>/g, "\n")
-      .replace(/<[^>]*>/g, "")
-      .trim();
+    const content = convertHTMLContentToText($(".topic_content").html());
+
     const replies = [];
 
     $('.cell[id^="r_"]').each((i, element) => {
       const $element = $(element);
       const reply = {
         author: $element.find(".dark").text().trim(),
-        content: $element
-          .find(".reply_content")
-          .html()
-          .replace(/<br\s*\/?>/g, "\n")
-          .replace(/<[^>]*>/g, "")
-          .trim(),
+        content: convertHTMLContentToText($element.find(".reply_content").html()),
         like: $element.find("td .small.fade").text().trim(),
         time: $element.find(".ago").text().trim(),
         op: $element.find(".badge.op").text().trim() === "OP",

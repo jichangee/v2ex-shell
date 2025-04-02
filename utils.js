@@ -40,3 +40,15 @@ export function refReplyContent(replies, lastReplys) {
     }
   });
 }
+
+export function convertHTMLContentToText(content) {
+  if (!content) {
+    return '';
+  }
+  return content
+    .replace(/<br\s*\/?>/g, "\n")
+    .replace(/<a[^>]*>\s*<img[^>]+src="([^"]+)"[^>]*>\s*<\/a>/g, '\n$1\n')
+    .replace(/<img[^>]+src="([^"]+)"[^>]*>/g, '\n$1\n')
+    .replace(/<[^>]*>/g, "")
+    .trim();
+}
