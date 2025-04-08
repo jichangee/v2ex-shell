@@ -33,3 +33,5 @@ pids/
 .eslintcache 
 
 preindex.js
+
+storage/

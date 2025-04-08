@@ -1,7 +1,7 @@
 import chalk from "chalk";
-import NodeCache from "node-cache";
+import { LocalStorage } from "node-localstorage";
 
-const cache = new NodeCache();
+const localStorage = new LocalStorage('./storage');
 
 const themes = {
   classic: {
@@ -35,9 +35,9 @@ export const themeChoices = [
 
 export const getTheme = (themeName) => {
   if (themeName) {
-    cache.set("theme", themeName);
+    localStorage.setItem("theme", themeName);
   }
-  const colors = themes[cache.get("theme")] || themes.classic;
+  const colors = themes[localStorage.getItem("theme")] || themes.classic;
   return {
     content: chalk[colors.content],
     default: chalk[colors.default],
